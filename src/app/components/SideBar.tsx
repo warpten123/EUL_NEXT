@@ -7,15 +7,23 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
-import { AppProvider, Navigation, Router } from '@toolpad/core/AppProvider';
+import { AppProvider, Branding, Navigation, Router } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { PageContainer } from '@toolpad/core/PageContainer';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Grid from '@mui/material/Grid';
+import TestPage from '../test/page';
+
 
 const NAVIGATION: Navigation = [
   {
     kind: 'header',
     title: 'Main items',
+  },
+  {
+    segment: 'upload-sdg-paper',
+    title: 'Upload SDG Paper',
+    icon: <CloudUploadIcon />
   },
   {
     segment: 'dashboard',
@@ -56,6 +64,7 @@ const NAVIGATION: Navigation = [
     title: 'Integrations',
     icon: <LayersIcon />,
   },
+ 
 ];
 
 const demoTheme = createTheme({
@@ -104,15 +113,27 @@ export default function DashboardLayoutBasic(props: any) {
   // Remove this const when copying and pasting into your project.
   const demoWindow = window ? window() : undefined;
 
+  const dashboardProps: Branding ={
+    title: 'EUL',
+    logo: <img src="/images/main-logo.webp" alt="Logo" />,
+    homeUrl: '/',
+  }
   return (
     <AppProvider
       navigation={NAVIGATION}
       router={router}
       theme={demoTheme}
       window={demoWindow}
+      branding={
+        dashboardProps
+      }
     >
       <DashboardLayout>
         <PageContainer>
+          {
+            router.pathname === "/upload-sdg-paper" ? (
+              <TestPage />
+            ) :
           <Grid container spacing={1}>
             <Grid size={5} />
             <Grid size={12}>
@@ -148,6 +169,7 @@ export default function DashboardLayoutBasic(props: any) {
               <Skeleton height={100} />
             </Grid>
           </Grid>
+}
         </PageContainer>
       </DashboardLayout>
     </AppProvider>
