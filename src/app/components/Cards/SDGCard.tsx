@@ -6,7 +6,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
-import { Cards } from '@/app/test/page';
+import { SDGCard as Cards } from '@/app/types/SDG/SDGCard';
+
+
 
 
 interface SDGCardProps {
@@ -14,10 +16,10 @@ interface SDGCardProps {
 }
 
 
-export default function SDGCard(data: SDGCardProps) {
+export default function SDGCardDisplay(data: SDGCardProps) {
+
   return (
     <Card sx={{ maxWidth: 345
-        
      }}>
       <CardActionArea>
         <CardMedia
