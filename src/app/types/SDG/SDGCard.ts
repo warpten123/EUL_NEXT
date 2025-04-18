@@ -23,4 +23,5 @@ export interface SDGViewCard {
   imageUrl: string
   targets: number
   targetLink: string
+  imageClear?: string
 }

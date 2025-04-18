@@ -7,7 +7,7 @@ import { SDGViewCard } from "../types/SDG/SDGCard";
 //     imageUrl: string
 //     targets: number
 //   }
-
+const baseURL = "/images/landing-sdg/";
 export const staticSDGData: SDGViewCard[] = [
   {
     title: "Goal 1: No Poverty",
@@ -18,6 +18,7 @@ export const staticSDGData: SDGViewCard[] = [
     imageUrl: "/images/goal 1.png",
     targets: 7,
     targetLink: "https://sdgs.un.org/goals/goal1",
+    imageClear: `${baseURL}E-WEB-Goal-01.png`,
   },
   {
     title: "Goal 2: Zero Hunger",
@@ -29,6 +30,7 @@ export const staticSDGData: SDGViewCard[] = [
     imageUrl: "/images/goal 2.png",
     targets: 8,
     targetLink: "https://sdgs.un.org/goals/goal2",
+    imageClear: `${baseURL}E-WEB-Goal-02.png`,
   },
   {
     title: "Goal 3: Good Health and Well-Being",
@@ -40,6 +42,7 @@ export const staticSDGData: SDGViewCard[] = [
     imageUrl: "/images/goal 3.png",
     targets: 13,
     targetLink: "https://sdgs.un.org/goals/goal3",
+    imageClear: `${baseURL}E-WEB-Goal-03.png`,
   },
   {
     title: "Goal 4: Quality Education",
@@ -51,6 +54,7 @@ export const staticSDGData: SDGViewCard[] = [
     imageUrl: "/images/goal 4.png",
     targets: 10,
     targetLink: "https://sdgs.un.org/goals/goal4",
+    imageClear: `${baseURL}E-WEB-Goal-04.png`,
   },
   {
     title: "Goal 5: Gender Equality",
@@ -60,7 +64,8 @@ export const staticSDGData: SDGViewCard[] = [
     `,
     imageUrl: "/images/goal 5.png",
     targets: 9,
-      targetLink: "https://sdgs.un.org/goals/goal5"
+    targetLink: "https://sdgs.un.org/goals/goal5",
+    imageClear: `${baseURL}E-WEB-Goal-05.png`,
   },
   {
     title: "Goal 6: Clean Water and Sanitation",
@@ -71,7 +76,8 @@ export const staticSDGData: SDGViewCard[] = [
         `,
     imageUrl: "/images/goal 6.png",
     targets: 8,
-      targetLink: "https://sdgs.un.org/goals/goal6"
+    targetLink: "https://sdgs.un.org/goals/goal6",
+     imageClear: `${baseURL}E-WEB-Goal-06.png`
   },
   {
     title: "Goal 7: Affordable and Clean Energy",
@@ -82,7 +88,8 @@ export const staticSDGData: SDGViewCard[] = [
             `,
     imageUrl: "/images/goal 7.png",
     targets: 5,
-      targetLink: "https://sdgs.un.org/goals/goal7"
+    targetLink: "https://sdgs.un.org/goals/goal7",
+     imageClear: `${baseURL}E-WEB-Goal-07.png`
   },
   {
     title: "Goal 8: Decent Work and Economic Growth",
@@ -93,7 +100,8 @@ export const staticSDGData: SDGViewCard[] = [
             `,
     imageUrl: "/images/goal 8.png",
     targets: 12,
-      targetLink: "https://sdgs.un.org/goals/goal8"
+    targetLink: "https://sdgs.un.org/goals/goal8",
+     imageClear: `${baseURL}E-WEB-Goal-08.png`
   },
   {
     title: "Goal 9: Industry, Innovation, and Infrastructure",
@@ -104,7 +112,8 @@ export const staticSDGData: SDGViewCard[] = [
                 `,
     imageUrl: "/images/goal 9.png",
     targets: 8,
-      targetLink: "https://sdgs.un.org/goals/goal9"
+    targetLink: "https://sdgs.un.org/goals/goal9",
+     imageClear: `${baseURL}E-WEB-Goal-09.png`
   },
   {
     title: "Goal 10: Reduced Inequalities",
@@ -114,7 +123,8 @@ export const staticSDGData: SDGViewCard[] = [
                 `,
     imageUrl: "/images/goal 10.png",
     targets: 10,
-      targetLink: "https://sdgs.un.org/goals/goal10"
+    targetLink: "https://sdgs.un.org/goals/goal10",
+     imageClear: `${baseURL}E-WEB-Goal-10.png`
   },
   {
     title: "Goal 11: Sustainable Cities and Communities",
@@ -125,7 +135,8 @@ export const staticSDGData: SDGViewCard[] = [
     `,
     imageUrl: "/images/goal 11.png",
     targets: 10,
-      targetLink: "https://sdgs.un.org/goals/goal11"
+    targetLink: "https://sdgs.un.org/goals/goal11",
+    imageClear: `${baseURL}E-WEB-Goal-11.png`
   },
   {
     title: "Goal 12: Responsible Consumption and Production",
@@ -135,7 +146,8 @@ export const staticSDGData: SDGViewCard[] = [
     `,
     imageUrl: "/images/goal 12.png",
     targets: 11,
-      targetLink: "https://sdgs.un.org/goals/goal12"
+    targetLink: "https://sdgs.un.org/goals/goal12",
+    imageClear: `${baseURL}E-WEB-Goal-12.png`
   },
   {
     title: "Goal 13: Climate Action",
@@ -145,7 +157,8 @@ export const staticSDGData: SDGViewCard[] = [
     `,
     imageUrl: "/images/goal 13.png",
     targets: 5,
-      targetLink: "https://sdgs.un.org/goals/goal13"
+    targetLink: "https://sdgs.un.org/goals/goal13",
+    imageClear: `${baseURL}E-WEB-Goal-13.png`
   },
   {
     title: "Goal 14: Life Below Water",
@@ -156,7 +169,8 @@ export const staticSDGData: SDGViewCard[] = [
     `,
     imageUrl: "/images/goal 14.png",
     targets: 10,
-      targetLink: "https://sdgs.un.org/goals/goal14"
+    targetLink: "https://sdgs.un.org/goals/goal14",
+    imageClear: `${baseURL}E-WEB-Goal-14.png`
   },
   {
     title: "Goal 15: Life on Land",
@@ -167,7 +181,8 @@ export const staticSDGData: SDGViewCard[] = [
     `,
     imageUrl: "/images/goal 15.png",
     targets: 12,
-      targetLink: "https://sdgs.un.org/goals/goal15"
+    targetLink: "https://sdgs.un.org/goals/goal15",
+    imageClear: `${baseURL}E-WEB-Goal-15.png`
   },
   {
     title: "Goal 16: Peace, Justice and Strong Institutions",
@@ -178,7 +193,8 @@ export const staticSDGData: SDGViewCard[] = [
     `,
     imageUrl: "/images/goal 16.png",
     targets: 12,
-      targetLink: "https://sdgs.un.org/goals/goal16"
+    targetLink: "https://sdgs.un.org/goals/goal16",
+    imageClear: `${baseURL}E-WEB-Goal-16.png`
   },
   {
     title: "Goal 17: Partnership for the Goals",
@@ -189,7 +205,7 @@ export const staticSDGData: SDGViewCard[] = [
     `,
     imageUrl: "/images/goal 17.png",
     targets: 19,
-      targetLink: "https://sdgs.un.org/goals/goal17"
+    targetLink: "https://sdgs.un.org/goals/goal17",
+    imageClear: `${baseURL}E-WEB-Goal-17.png`
   },
-  
 ];

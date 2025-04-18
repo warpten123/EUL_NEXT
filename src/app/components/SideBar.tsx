@@ -1,91 +1,123 @@
-"use client"
+"use client";
 
-import * as React from 'react';
-import { createTheme, styled } from '@mui/material/styles';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import DescriptionIcon from '@mui/icons-material/Description';
-import LayersIcon from '@mui/icons-material/Layers';
-import { AppProvider, Branding, Navigation, Router } from '@toolpad/core/AppProvider';
-import { DashboardLayout } from '@toolpad/core/DashboardLayout';
-import { PageContainer } from '@toolpad/core/PageContainer';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import NewspaperIcon from '@mui/icons-material/Newspaper';
-import Grid from '@mui/material/Grid';
-import TestPage from '../test/page';
-
+import * as React from "react";
+import { createTheme, styled } from "@mui/material/styles";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import DescriptionIcon from "@mui/icons-material/Description";
+import LayersIcon from "@mui/icons-material/Layers";
+import {
+  AppProvider,
+  Branding,
+  Navigation,
+  Router,
+} from "@toolpad/core/AppProvider";
+import { DashboardLayout } from "@toolpad/core/DashboardLayout";
+import { PageContainer } from "@toolpad/core/PageContainer";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import LogoutIcon from '@mui/icons-material/Logout';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import NewspaperIcon from "@mui/icons-material/Newspaper";
+import SettingsIcon from '@mui/icons-material/Settings';
+import Grid from "@mui/material/Grid";
+import TestPage from "../test/page";
+import Image from "next/image";
+import WhatsGoingOn from "./Dashboard/WhatsGoingOn";
 
 const NAVIGATION: Navigation = [
   {
-    kind: 'header',
-    title: 'Main items',
+    kind: "header",
+    title: "Main items",
   },
   {
-    segment: 'classify',
-    title: 'Classify',
+    segment: "classify",
+    title: "Classify",
     icon: <ReceiptIcon />,
     children: [
       {
-        segment: 'upload-sdg-paper',
-        title: 'Classify Research Paper',
-        icon: <CloudUploadIcon />
+        segment: "upload-sdg-paper",
+        title: "Classify Research Paper",
+        icon: <CloudUploadIcon />,
       },
       {
-        segment: 'upload-article-links',
-        title: 'Classify News Article',
-        icon: <NewspaperIcon />
+        segment: "upload-article-links",
+        title: "Classify News Article",
+        icon: <NewspaperIcon />,
       },
     ],
   },
 
   {
-    segment: 'dashboard',
-    title: 'Dashboard',
+    segment: "dashboard",
+    title: "The SDGs",
     icon: <DashboardIcon />,
   },
   {
-    segment: 'orders',
-    title: 'Orders',
-    icon: <ShoppingCartIcon />,
+    segment: "orders",
+    title: "Your SDGs",
+    icon: <InventoryIcon />,
   },
   {
-    kind: 'divider',
+    kind: "divider",
   },
   {
-    kind: 'header',
-    title: 'Analytics',
+    kind: "header",
+    title: "Analytics",
   },
   {
-    segment: 'reports',
-    title: 'Reports',
+    segment: "reports",
+    title: "Reports",
     icon: <BarChartIcon />,
     children: [
       {
-        segment: 'sales',
-        title: 'Sales',
+        segment: "sales",
+        title: "Sales",
         icon: <DescriptionIcon />,
       },
       {
-        segment: 'traffic',
-        title: 'Traffic',
+        segment: "traffic",
+        title: "Traffic",
         icon: <DescriptionIcon />,
       },
     ],
   },
   {
-    segment: 'integrations',
-    title: 'Integrations',
+    segment: "integrations",
+    title: "Integrations",
     icon: <LayersIcon />,
   },
- 
+  {
+    kind: "divider",
+  },
+  {
+    kind: "header",
+    title: "System",
+  },
+  {
+    segment: "settings",
+    title: "Settings",
+    icon: <SettingsIcon />,
+    children: [
+      {
+        segment: "account",
+        title: "Account",
+        icon: <AccountCircleIcon />,
+      },
+      {
+        segment: "logout",
+        title: "Logout",
+        icon: <LogoutIcon />,
+      },
+    ],
+  },
 ];
 
 const demoTheme = createTheme({
   colorSchemes: { light: true, dark: true },
   cssVariables: {
-    colorSchemeSelector: 'class',
+    colorSchemeSelector: "class",
   },
   breakpoints: {
     values: {
@@ -112,7 +144,7 @@ function useDemoRouter(initialPath: string): Router {
   return router;
 }
 
-const Skeleton = styled('div')<{ height: number }>(({ theme, height }) => ({
+const Skeleton = styled("div")<{ height: number }>(({ theme, height }) => ({
   backgroundColor: theme.palette.action.hover,
   borderRadius: theme.shape.borderRadius,
   height,
@@ -123,32 +155,26 @@ const Skeleton = styled('div')<{ height: number }>(({ theme, height }) => ({
 export default function DashboardLayoutBasic(props: any) {
   const { window } = props;
 
-  const router = useDemoRouter('/dashboard');
+  const router = useDemoRouter("/dashboard");
 
   // Remove this const when copying and pasting into your project.
   const demoWindow = window ? window() : undefined;
 
-  const dashboardProps: Branding ={
-    title: 'EUL',
-    logo: <img src="/images/main-logo.webp" alt="Logo" />,
-    homeUrl: '/',
-  }
-  return (
-    <AppProvider
-      navigation={NAVIGATION}
-      router={router}
-      theme={demoTheme}
-      window={demoWindow}
-      branding={
-        dashboardProps
-      }
-    >
-      <DashboardLayout>
-        <PageContainer>
-          {
-            router.pathname === "/classify/upload-sdg-paper" ? (
-              <TestPage />
-            ) :
+  const dashboardProps: Branding = {
+    title: "EUL",
+    logo: (
+      <Image src="/images/main-logo.webp" alt="Logo" width={50} height={100} />
+    ),
+    homeUrl: "/",
+  };
+  const renderContent = (pathname: string) => {
+    switch (pathname) {
+      case "/classify/upload-sdg-paper":
+        return <TestPage />;
+      case "/dashboard":
+        return <WhatsGoingOn />;
+      default:
+        return (
           <Grid container spacing={1}>
             <Grid size={5} />
             <Grid size={12}>
@@ -163,14 +189,12 @@ export default function DashboardLayoutBasic(props: any) {
             <Grid size={8}>
               <Skeleton height={100} />
             </Grid>
-
             <Grid size={12}>
               <Skeleton height={150} />
             </Grid>
             <Grid size={12}>
               <Skeleton height={14} />
             </Grid>
-
             <Grid size={3}>
               <Skeleton height={100} />
             </Grid>
@@ -184,8 +208,20 @@ export default function DashboardLayoutBasic(props: any) {
               <Skeleton height={100} />
             </Grid>
           </Grid>
-}
-        </PageContainer>
+        );
+    }
+  };
+
+  return (
+    <AppProvider
+      navigation={NAVIGATION}
+      router={router}
+      theme={demoTheme}
+      window={demoWindow}
+      branding={dashboardProps}
+    >
+      <DashboardLayout>
+        <PageContainer>{renderContent(router.pathname)}</PageContainer>
       </DashboardLayout>
     </AppProvider>
   );

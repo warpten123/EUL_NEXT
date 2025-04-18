@@ -86,3 +86,26 @@ export const createSDGViewCard = (data: SDGCard): SDGViewCard | null => {
   }
   return null; 
 };
+
+export const getSDGColor = (title: string): string => {
+  const sdgColors: { [key: string]: string } = {
+    "Goal 1: No Poverty": "#E5243B",
+    "Goal 2: Zero Hunger": "#DDA63A",
+    "Goal 3: Good Health and Well-Being": "#4C9F38",
+    "Goal 4: Quality Education": "#C5192D",
+    "Goal 5: Gender Equality": "#FF3A21",
+    "Goal 6: Clean Water and Sanitation": "#26BDE2",
+    "Goal 7: Affordable and Clean Energy": "#FCC30B",
+    "Goal 8: Decent Work and Economic Growth": "#A21942",
+    "Goal 9: Industry, Innovation, and Infrastructure": "#FD6925",
+    "Goal 10: Reduced Inequalities": "#DD1367",
+    "Goal 11: Sustainable Cities and Communities": "#FD9D24",
+    "Goal 12: Responsible Consumption and Production": "#BF8B2E",
+    "Goal 13: Climate Action": "#3F7E44",
+    "Goal 14: Life Below Water": "#0A97D9",
+    "Goal 15: Life on Land": "#56C02B",
+    "Goal 16: Peace, Justice and Strong Institutions": "#00689D",
+    "Goal 17: Partnership for the Goals": "#19486A",
+  };
+  return sdgColors[title] || "#4fc3f7";
+};

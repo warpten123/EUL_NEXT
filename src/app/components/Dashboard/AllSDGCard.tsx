@@ -2,17 +2,16 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
-import { SDGCard as Cards, SDGViewCard } from "@/app/types/SDG/SDGCard";
-import { useEffect, useState } from "react";
-import CustomizedDialogs from "../Extra/SDGDialog";
-import { createSDGViewCard, getSDGColor } from "@/app/helpers/sdgHelpers";
-import { Box, keyframes } from "@mui/material";
+import { Box, keyframes, Typography } from "@mui/material";
+import { SDGViewCard } from "@/app/types/SDG/SDGCard";
+import { getSDGColor } from "@/app/helpers/sdgHelpers";
+import FullScreenDialog from "./LandingPageSDG";
 
 interface SDGCardProps {
-  card: Cards;
+  card: SDGViewCard;
 }
+
 
 
 const waveAnim = keyframes`
@@ -27,29 +26,21 @@ const waveAnim = keyframes`
   }
 `;
 
-export default function SDGCardDisplay(data: Readonly<SDGCardProps>) {
-  const [open, setOpen] = useState(false);
-  const [cardView, setCardView] = useState<SDGViewCard>();
 
-  const handleClickOpenSDGView = () => setOpen(true);
-  const handleCloseView = () => setOpen(false);
-
-  useEffect(() => {
-    setCardView(createSDGViewCard(data.card) as SDGViewCard);
-  }, [data.card]);
+export default function AllSDGCard(data: Readonly<SDGCardProps>) {
 
   const sdgColor = getSDGColor(data.card.title);
-
   return (
     <>
       <Card
         sx={{
-          maxWidth: 345,
+          maxWidth: 360,
           perspective: "1000px",
           "&:hover .card-inner": {
             transform: "rotateY(180deg)",
           },
         }}
+        
       >
         <CardActionArea
           className="card-inner"
@@ -58,13 +49,18 @@ export default function SDGCardDisplay(data: Readonly<SDGCardProps>) {
             transition: "transform 0.6s",
             position: "relative",
           }}
-          onClick={handleClickOpenSDGView}
+          // onClick={() => {
+          //   if (data?.card.targetLink) {
+          //     window.open(data?.card.targetLink, "_blank", "noopener,noreferrer");
+          //   }
+          // }}
+        
         >
           {/* Front */}
           <CardMedia
             component="img"
             height="400"
-            image={data.card.image}
+            image={data.card.imageClear}
             alt={data.card.title}
             sx={{ backfaceVisibility: "hidden" }}
           />
@@ -92,7 +88,7 @@ export default function SDGCardDisplay(data: Readonly<SDGCardProps>) {
                 bottom: 0,
                 left: 0,
                 width: "100%",
-                height: `${data.card.percent}%`,
+                height: `45%`,
                 overflow: "hidden",
                 zIndex: 0,
               }}
@@ -117,29 +113,28 @@ export default function SDGCardDisplay(data: Readonly<SDGCardProps>) {
                 px: 1,
               }}
             >
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
-                {"Your research aligns with this SDG by"}
-              </Typography>
+            
               <Typography variant="h5" fontWeight="bold">
-                {data.card.percent}%
+                {data.card.description}
               </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
+              {/* <FullScreenDialog /> */}
+              {/* <Typography variant="body2" sx={{ mt: 4 }}>
                 {
                   "This percentage indicates how closely your research contributes to achieving this Sustainable Development Goal."
                 }
-              </Typography>
+              </Typography> */}
             </Box>
           </CardContent>
         </CardActionArea>
       </Card>
 
       {/* Dialog */}
-      <CustomizedDialogs
+      {/* <CustomizedDialogs
         open={open}
         handleClickOpen={handleClickOpenSDGView}
         handleClose={handleCloseView}
         data={cardView as SDGViewCard}
-      />
+      /> */}
     </>
   );
 }
