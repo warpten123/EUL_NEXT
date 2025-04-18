@@ -21,6 +21,7 @@ export default function SDGUploadButtonCard() {
     message: "",
   });
   const [goUpload, setGoUpload] = useState(false);
+
   const [loadingClassify, setLoadingClassify] = useState(false);
 
   const handleClose = () => {
@@ -39,7 +40,6 @@ export default function SDGUploadButtonCard() {
       const fileName = event.target.files[0].name;
       const researchId = generateResearchId();
       try {
-    
         await uploadFile(researchFile, researchId);
         fetchApi(fileName);
         setGoUpload(true);
@@ -140,6 +140,7 @@ export default function SDGUploadButtonCard() {
           })()}
         </Box>
       }
+
       <GlobalSnackbar
         open={snackbarOpen}
         onClose={handleClose}
