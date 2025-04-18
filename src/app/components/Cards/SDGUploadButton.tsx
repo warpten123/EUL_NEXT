@@ -12,10 +12,12 @@ import SDGCardDisplay from "./SDGCard";
 import GlobalSnackbar from "../Extra/SnackBar";
 import EmptySDGCard from "./EmptySDGCard";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
 export default function SDGUploadButtonCard() {
   const [results, setResults] = useState<SdgClassificationResult | null>(null);
   const [filteredCard, setFilteredCard] = useState<SDGCard[]>([]);
+  const [pdfFile, setPDfFile] = useState<File>();
   const [snackbarOpen, setSnackbarOpen] = useState({
     open: false,
     message: "",
@@ -31,11 +33,19 @@ export default function SDGUploadButtonCard() {
     });
   };
 
+  const openPDF = () => {
+    if (pdfFile) {
+      const fileURL = URL.createObjectURL(pdfFile);
+      window.open(fileURL, "_blank");
+    }
+  };
+
   const onHandleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.target.files?.[0]) {
       setFilteredCard([]);
       setLoadingClassify(true);
+      setPDfFile(event.target.files?.[0])
       const researchFile = event.target.files[0];
       const fileName = event.target.files[0].name;
       const researchId = generateResearchId();
@@ -92,20 +102,34 @@ export default function SDGUploadButtonCard() {
   return (
     <>
       {goUpload && (
-        <Button
-          startIcon={<CloudUploadIcon />} // Add the upload icon
-          onClick={() => {
-            setGoUpload(false);
-            setFilteredCard([]);
-            setLoadingClassify(false);
-            setSnackbarOpen({
-              open: false,
-              message: "",
-            });
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          Upload Again
-        </Button>
+          <Button
+            startIcon={<CloudUploadIcon />}
+            onClick={() => {
+              setGoUpload(false);
+              setFilteredCard([]);
+              setLoadingClassify(false);
+              setSnackbarOpen({
+                open: false,
+                message: "",
+              });
+            }}
+          >
+            Upload Again
+          </Button>
+          <Button 
+          onClick={openPDF}
+          startIcon={<PictureAsPdfIcon />
+          
+        }>View PDF</Button>
+        </Box>
       )}
       {
         <Box

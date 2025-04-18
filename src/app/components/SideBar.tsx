@@ -4,6 +4,7 @@ import * as React from 'react';
 import { createTheme, styled } from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
@@ -11,6 +12,7 @@ import { AppProvider, Branding, Navigation, Router } from '@toolpad/core/AppProv
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { PageContainer } from '@toolpad/core/PageContainer';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
 import Grid from '@mui/material/Grid';
 import TestPage from '../test/page';
 
@@ -21,10 +23,23 @@ const NAVIGATION: Navigation = [
     title: 'Main items',
   },
   {
-    segment: 'upload-sdg-paper',
-    title: 'Upload SDG Paper',
-    icon: <CloudUploadIcon />
+    segment: 'classify',
+    title: 'Classify',
+    icon: <ReceiptIcon />,
+    children: [
+      {
+        segment: 'upload-sdg-paper',
+        title: 'Classify Research Paper',
+        icon: <CloudUploadIcon />
+      },
+      {
+        segment: 'upload-article-links',
+        title: 'Classify News Article',
+        icon: <NewspaperIcon />
+      },
+    ],
   },
+
   {
     segment: 'dashboard',
     title: 'Dashboard',
@@ -131,7 +146,7 @@ export default function DashboardLayoutBasic(props: any) {
       <DashboardLayout>
         <PageContainer>
           {
-            router.pathname === "/upload-sdg-paper" ? (
+            router.pathname === "/classify/upload-sdg-paper" ? (
               <TestPage />
             ) :
           <Grid container spacing={1}>
