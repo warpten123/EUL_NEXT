@@ -1,16 +1,9 @@
 import * as React from "react";
-
-import { styled } from "@mui/material/styles";
 import { fetchClassification, uploadFile } from "@/app/api/sdg-classifier";
-import {
-  SDGCard,
-  SdgClassificationResult,
-  UploadResponse,
-} from "@/app/types/SDG/SDGCard";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { SDGCard, SdgClassificationResult } from "@/app/types/SDG/SDGCard";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import { Box, CircularProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import {
   convertSDGResultToCard,
   generateResearchId,
@@ -18,18 +11,7 @@ import {
 import SDGCardDisplay from "./SDGCard";
 import GlobalSnackbar from "../Extra/SnackBar";
 import EmptySDGCard from "./EmptySDGCard";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 export default function SDGUploadButtonCard() {
   const [results, setResults] = useState<SdgClassificationResult | null>(null);
@@ -51,20 +33,23 @@ export default function SDGUploadButtonCard() {
   const onHandleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.target.files?.[0]) {
-      setGoUpload(true);
+      setFilteredCard([]);
       setLoadingClassify(true);
       const researchFile = event.target.files[0];
       const fileName = event.target.files[0].name;
       const researchId = generateResearchId();
       try {
+    
         await uploadFile(researchFile, researchId);
         fetchApi(fileName);
+        setGoUpload(true);
       } catch (error) {
         console.error("Error uploading file:", error);
         setSnackbarOpen({
           open: true,
           message: "Error uploading file",
         });
+        setGoUpload(true);
         setLoadingClassify(false);
       }
     } else {
@@ -106,19 +91,22 @@ export default function SDGUploadButtonCard() {
 
   return (
     <>
-      <Button
-        onClick={() => {
-          setGoUpload(false);
-          setFilteredCard([]);
-          setLoadingClassify(false);
-          setSnackbarOpen({
-            open: false,
-            message: "",
-          });
-        }}
-      >
-        X
-      </Button>
+      {goUpload && (
+        <Button
+          startIcon={<CloudUploadIcon />} // Add the upload icon
+          onClick={() => {
+            setGoUpload(false);
+            setFilteredCard([]);
+            setLoadingClassify(false);
+            setSnackbarOpen({
+              open: false,
+              message: "",
+            });
+          }}
+        >
+          Upload Again
+        </Button>
+      )}
       {
         <Box
           sx={{

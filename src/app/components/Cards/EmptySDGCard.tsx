@@ -4,8 +4,6 @@ import {
   CardMedia,
   CardContent,
   Typography,
-  CardActions,
-  Button,
 } from "@mui/material";
 import { useRef } from "react";
 

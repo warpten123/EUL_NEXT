@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
 
 interface GlobalSnackbarProps extends SnackbarOrigin {
-  open: { open: boolean; message: string; };
+  open: { open: boolean; message: string; autoHideDuration?: number };
   onClose: () => void;
 }
 
@@ -21,6 +21,7 @@ export default function GlobalSnackbar({
         onClose={onClose}
         message={open.message}
         key={vertical + horizontal}
+        autoHideDuration={open.autoHideDuration ?? 3000}
       />
     </Box>
   );
