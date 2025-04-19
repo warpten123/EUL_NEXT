@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as React from "react";
 import { fetchClassification, uploadFile } from "@/app/api/sdg-classifier";
 import { SDGCard, SdgClassificationResult } from "@/app/types/SDG/SDGCard";
@@ -14,11 +14,16 @@ import GlobalSnackbar from "../Extra/SnackBar";
 import EmptySDGCard from "./EmptySDGCard";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import { uploadToCloudinary } from "@/app/api/upload-cloudinary";
+import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
+import useLoggedUser from "@/app/hooks/useLoggedUser";
 
 export default function SDGUploadButtonCard() {
   const [results, setResults] = useState<SdgClassificationResult | null>(null);
   const [filteredCard, setFilteredCard] = useState<SDGCard[]>([]);
   const [pdfFile, setPDfFile] = useState<File>();
+  const loggedUser = useLoggedUser();
+  const [researchId, setResearchId] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState({
     open: false,
     message: "",
@@ -46,10 +51,10 @@ export default function SDGUploadButtonCard() {
     if (event.target.files?.[0]) {
       setFilteredCard([]);
       setLoadingClassify(true);
-      setPDfFile(event.target.files?.[0])
+      setPDfFile(event.target.files?.[0]);
       const researchFile = event.target.files[0];
       const fileName = event.target.files[0].name;
-      const researchId = generateResearchId();
+      setResearchId(generateResearchId());
       try {
         await uploadFile(researchFile, researchId);
         fetchApi(fileName);
@@ -70,6 +75,24 @@ export default function SDGUploadButtonCard() {
       });
       setLoadingClassify(false);
       console.error("No file selected or files is null");
+    }
+  };
+
+  const handleUploadToCloud = async () => {
+    try {
+      const result = await uploadToCloudinary(
+        pdfFile as File,
+        loggedUser?.uid as string
+      );
+      console.log("RESULT FROM CLOUD: ", result);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setSnackbarOpen({
+        open: true,
+        message: "Error uploading file",
+      });
+      setGoUpload(true);
+      setLoadingClassify(false);
     }
   };
 
@@ -125,11 +148,12 @@ export default function SDGUploadButtonCard() {
           >
             Upload Again
           </Button>
-          <Button 
-          onClick={openPDF}
-          startIcon={<PictureAsPdfIcon />
-          
-        }>View PDF</Button>
+          <Button onClick={openPDF} startIcon={<PictureAsPdfIcon />}>
+            View PDF
+          </Button>
+          <Button onClick={handleUploadToCloud} startIcon={<LibraryAddIcon />}>
+            Save Classified Paper
+          </Button>
         </Box>
       )}
       {

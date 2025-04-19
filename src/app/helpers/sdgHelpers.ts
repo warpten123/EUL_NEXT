@@ -32,7 +32,7 @@ const sdgImageMapper = (sdgTitle: string) => {
       return "/images/goal 3.png";
     case "Goal 4: Quality Education":
       return "/images/goal 4.png";
-    case "Goal 5: Gender Quality":
+    case "Goal 5: Gender Equality":
       return "/images/goal 5.png";
     case "Goal 6: Clean Water and Sanitation":
       return "/images/goal 6.png";

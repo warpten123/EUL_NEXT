@@ -130,6 +130,18 @@ const Login = () => {
             />
           </Box>
           <CardContent>
+            <Typography
+              variant="h6"
+              textAlign="center"
+              gutterBottom
+              sx={{
+                fontSize: "0.875rem", 
+                fontStyle: "italic", 
+                fontWeight: "bold", 
+              }}
+            >
+              {"UN SDG Classifier and Repository"}
+            </Typography>
             <Typography variant="h5" textAlign="center" gutterBottom>
               {isLogin ? "Login to Your Account" : "Create an Account"}
             </Typography>
