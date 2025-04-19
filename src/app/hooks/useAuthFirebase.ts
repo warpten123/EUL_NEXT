@@ -18,11 +18,11 @@ const useAuthFirebase = () => {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       if (auth.currentUser) {
         await updateProfile(auth.currentUser, {
-          displayName: "Testing Name", // Set the display name
+          displayName:  email.split("@")[0].toUpperCase(), 
         });
       }
       return userCredential.user;

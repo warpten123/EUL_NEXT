@@ -18,19 +18,19 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Image from "next/image";
 import useAuthFirebase from "@/app/hooks/useAuthFirebase";
 import GlobalSnackbar from "../Extra/SnackBar";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 
 const Login = () => {
-  const router = useRouter(); 
-  const { createUserWithEmailPassword,signInWithEmailPassword } = useAuthFirebase();
+  const router = useRouter();
+  const { createUserWithEmailPassword, signInWithEmailPassword } =
+    useAuthFirebase();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-
- console.log(error)
+  console.log(error);
 
   //for snackbar
   const [snackbarOpen, setSnackbarOpen] = useState({
@@ -66,16 +66,14 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailPassword( email, password);
-      console.log(userCredential)
+      const userCredential = await signInWithEmailPassword(email, password);
+      console.log(userCredential);
       router.push("/dashboard");
     } catch (error) {
       console.error("Error logging in:", error);
-      
     }
   };
 
- 
   return (
     <Box
       sx={{
@@ -124,12 +122,36 @@ const Login = () => {
           }}
         >
           <Box display="flex" justifyContent="center" mb={2}>
-            <Image src="/logo.png" alt="Logo" width={60} height={60} />
+            <Image
+              src="/images/login-logo.png"
+              alt="Logo"
+              width={60}
+              height={60}
+            />
           </Box>
           <CardContent>
             <Typography variant="h5" textAlign="center" gutterBottom>
               {isLogin ? "Login to Your Account" : "Create an Account"}
             </Typography>
+
+            {/* {!isLogin && (
+              <TextField
+                fullWidth
+                label="Display Name"
+                type="email"
+                margin="normal"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            )} */}
 
             <TextField
               fullWidth
@@ -147,7 +169,6 @@ const Login = () => {
                 ),
               }}
             />
-
             <TextField
               fullWidth
               label="Password"
@@ -174,7 +195,6 @@ const Login = () => {
                 ),
               }}
             />
-
             <Button
               variant="contained"
               color="primary"
@@ -184,7 +204,6 @@ const Login = () => {
             >
               {isLogin ? "Login" : "Sign Up"}
             </Button>
-
             {/* Google Login Button */}
             <Button
               variant="outlined"
@@ -195,7 +214,6 @@ const Login = () => {
             >
               Sign in with Google
             </Button>
-
             <Button
               variant="text"
               color="primary"

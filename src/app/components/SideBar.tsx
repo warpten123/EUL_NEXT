@@ -25,9 +25,10 @@ import Grid from "@mui/material/Grid";
 import TestPage from "../test/page";
 import Image from "next/image";
 import WhatsGoingOn from "./Dashboard/WhatsGoingOn";
-import { User } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import useAuthFirebase from "../hooks/useAuthFirebase";
 import { useRouter } from "next/navigation";
+import { auth } from "../auth/config";
 
 const NAVIGATION: Navigation = [
   {
@@ -163,9 +164,18 @@ export default function DashboardLayoutBasic(props: any) {
   const [loggedUser, setLoggedUser] = React.useState<User | null>();
 
   React.useEffect(() => {
-    const loggedInUser = getCurrentUser();
-    if (loggedInUser) setLoggedUser(loggedInUser);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setLoggedUser(user); 
+      } else {
+        setLoggedUser(null); 
+      }
+    });
+  
+    // Cleanup the listener on component unmount
+    return () => unsubscribe();
   }, [getCurrentUser]);
+  console.log(loggedUser)
   //end firebase related user shit
   const { window } = props;
 
@@ -194,7 +204,7 @@ export default function DashboardLayoutBasic(props: any) {
     }
   };
 
-  console.log("loggeduser", loggedUser)
+  
   
   const renderContent = (pathname: string) => {
     switch (pathname) {
