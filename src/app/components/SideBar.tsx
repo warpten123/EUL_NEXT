@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { createTheme, styled } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import BarChartIcon from "@mui/icons-material/BarChart";
