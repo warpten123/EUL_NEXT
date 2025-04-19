@@ -16,15 +16,18 @@ import {
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { PageContainer } from "@toolpad/core/PageContainer";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import LogoutIcon from '@mui/icons-material/Logout';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from "@mui/icons-material/Logout";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
-import SettingsIcon from '@mui/icons-material/Settings';
+import SettingsIcon from "@mui/icons-material/Settings";
 import Grid from "@mui/material/Grid";
 import TestPage from "../test/page";
 import Image from "next/image";
 import WhatsGoingOn from "./Dashboard/WhatsGoingOn";
+import { User } from "firebase/auth";
+import useAuthFirebase from "../hooks/useAuthFirebase";
+import { useRouter } from "next/navigation";
 
 const NAVIGATION: Navigation = [
   {
@@ -133,6 +136,7 @@ const demoTheme = createTheme({
 function useDemoRouter(initialPath: string): Router {
   const [pathname, setPathname] = React.useState(initialPath);
 
+
   const router = React.useMemo(() => {
     return {
       pathname,
@@ -153,6 +157,16 @@ const Skeleton = styled("div")<{ height: number }>(({ theme, height }) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function DashboardLayoutBasic(props: any) {
+  //firebase related user shit
+  const routerLogout = useRouter(); 
+  const { getCurrentUser,logout } = useAuthFirebase();
+  const [loggedUser, setLoggedUser] = React.useState<User | null>();
+
+  React.useEffect(() => {
+    const loggedInUser = getCurrentUser();
+    if (loggedInUser) setLoggedUser(loggedInUser);
+  }, [getCurrentUser]);
+  //end firebase related user shit
   const { window } = props;
 
   const router = useDemoRouter("/dashboard");
@@ -161,18 +175,36 @@ export default function DashboardLayoutBasic(props: any) {
   const demoWindow = window ? window() : undefined;
 
   const dashboardProps: Branding = {
-    title: "EUL",
+    title: `Welcome ${loggedUser?.displayName}`,
     logo: (
       <Image src="/images/main-logo.webp" alt="Logo" width={50} height={100} />
     ),
     homeUrl: "/",
   };
+  
+  const handleLogout = async () => {
+    try {
+    
+      await logout(); 
+      setLoggedUser(null);
+      routerLogout.push("/login");
+
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
+  console.log("loggeduser", loggedUser)
+  
   const renderContent = (pathname: string) => {
     switch (pathname) {
       case "/classify/upload-sdg-paper":
         return <TestPage />;
       case "/dashboard":
         return <WhatsGoingOn />;
+      case "/settings/logout":
+         handleLogout()
+         return null
       default:
         return (
           <Grid container spacing={1}>

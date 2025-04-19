@@ -88,7 +88,7 @@ export default function AllSDGCard(data: Readonly<SDGCardProps>) {
                 bottom: 0,
                 left: 0,
                 width: "100%",
-                height: `45%`,
+                height: `80%`, //change this value to adjust the height of the wave animation
                 overflow: "hidden",
                 zIndex: 0,
               }}
