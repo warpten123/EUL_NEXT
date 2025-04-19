@@ -6,7 +6,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import { Box, keyframes, Typography } from "@mui/material";
 import { SDGViewCard } from "@/app/types/SDG/SDGCard";
 import { getSDGColor } from "@/app/helpers/sdgHelpers";
-import FullScreenDialog from "./LandingPageSDG";
+
 
 interface SDGCardProps {
   card: SDGViewCard;

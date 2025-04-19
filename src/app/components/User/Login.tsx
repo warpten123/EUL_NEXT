@@ -30,7 +30,7 @@ const Login = () => {
   const [error, setError] = useState("");
 
 
- 
+ console.log(error)
 
   //for snackbar
   const [snackbarOpen, setSnackbarOpen] = useState({
