@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react";
 import { fetchClassification, uploadFile } from "@/app/api/sdg-classifier";
 import { SDGCard, SdgClassificationResult } from "@/app/types/SDG/SDGCard";
