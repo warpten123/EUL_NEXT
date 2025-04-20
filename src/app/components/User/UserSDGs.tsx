@@ -1,5 +1,5 @@
 "use client";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import useLoggedUser from "@/app/hooks/useLoggedUser";
 import { fetchGoalsByUserId } from "@/app/api/firestore";
@@ -16,13 +16,14 @@ export interface CloudinaryFile {
 
 const UserSDGs = () => {
   const [userFiles, setUserFiles] = useState<CloudinaryFile[]>([]);
-  const [yourSDGs, setYourSDGs] = useState<YourSDGCard[]>([]); // Store the converted SDG cards
+  const [yourSDGs, setYourSDGs] = useState<YourSDGCard[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const loggedUser = useLoggedUser();
-
-  console.log(userFiles);
+  console.log("userFiles",userFiles)
   useEffect(() => {
     const fetchUserFiles = async () => {
       if (loggedUser) {
+        setIsLoading(true);
         try {
           // Fetch user files from Cloudinary
           const res = await fetch(
@@ -36,17 +37,31 @@ const UserSDGs = () => {
 
           // Convert to YourSDGCard
           const convertedSDGs = convertToYourSDG(res2, files);
-          setYourSDGs(convertedSDGs); // Update the state with converted SDGs
+          setYourSDGs(convertedSDGs);
         } catch (err) {
           console.error("Error fetching user files or goals:", err);
         }
+        setIsLoading(false);
       }
     };
 
     fetchUserFiles();
-  }, [loggedUser]); // Only run when loggedUser changes
+  }, [loggedUser]);
 
-  console.log(yourSDGs);
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          height: "60vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box

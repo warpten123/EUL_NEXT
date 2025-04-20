@@ -8,6 +8,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import { getSDGColor } from "@/app/helpers/sdgHelpers";
 import { Box } from "@mui/material";
 import { YourSDGCard } from "@/app/types/SDG/SDGCard";
+import { useState } from "react";
 
 interface SDGCardProps {
   card: YourSDGCard;
@@ -26,6 +27,7 @@ interface SDGCardProps {
 // `;
 
 export default function YourSDGCardComponent(data: Readonly<SDGCardProps>) {
+ 
   // const handleClickOpenSDGView = () => setOpen(true);
   // const handleCloseView = () => setOpen(false);
 

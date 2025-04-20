@@ -8,7 +8,7 @@ import {
 } from "@/app/types/SDG/SDGCard";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import {
   convertSDGResultToCard,
   generateResearchId,
@@ -25,6 +25,7 @@ import { saveGoalsToFirestore } from "@/app/api/firestore";
 
 export default function SDGUploadButtonCard() {
   const [results, setResults] = useState<SdgClassificationResult | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [filteredCard, setFilteredCard] = useState<SDGCard[]>([]);
   const [pdfFile, setPdfFile] = useState<File>();
   const loggedUser = useLoggedUser();
@@ -62,7 +63,7 @@ export default function SDGUploadButtonCard() {
         loggedUser?.uid as string,
         researchId
       );
-      console.log("result",result)
+      console.log("result", result);
     } catch (error) {
       console.error("Error uploading file:", error);
       setSnackbarOpen({
@@ -86,7 +87,6 @@ export default function SDGUploadButtonCard() {
       try {
         await uploadFile(researchFile, researchId);
         fetchApi(fileName);
-        setGoUpload(true);
       } catch (error) {
         console.error("Error uploading file:", error);
         setSnackbarOpen({
@@ -107,14 +107,18 @@ export default function SDGUploadButtonCard() {
   };
 
   const handleUploadToCloud = async () => {
+    setIsLoading(true);
     try {
-      const result = await uploadToCloudinary(
+      await uploadToCloudinary(
         pdfFile as File,
         loggedUser?.uid as string,
         researchId
       );
-      saveToFireStore()
-      console.log("RESULT FROM CLOUD: ", result);
+      saveToFireStore();
+      setSnackbarOpen({
+        open: true,
+        message: `File Successfully Saved in EUL!`,
+      });
     } catch (error) {
       console.error("Error uploading file:", error);
       setSnackbarOpen({
@@ -124,6 +128,7 @@ export default function SDGUploadButtonCard() {
       setGoUpload(true);
       setLoadingClassify(false);
     }
+    setIsLoading(false);
   };
 
   const fetchApi = async (fileName: string) => {
@@ -137,6 +142,7 @@ export default function SDGUploadButtonCard() {
         open: true,
         message: "Research Successfully Classified!",
       });
+      setGoUpload(true);
     } catch (error) {
       console.error("Error fetching classification:", error);
       setSnackbarOpen({
@@ -178,13 +184,23 @@ export default function SDGUploadButtonCard() {
           >
             Upload Again
           </Button>
-          <Button onClick={openPDF} startIcon={<PictureAsPdfIcon />}>
-            View PDF
-          </Button>
-          <Button onClick={handleUploadToCloud} startIcon={<LibraryAddIcon />}>
-            Save Classified Paper
-          </Button>
+
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
+            <Button
+              onClick={handleUploadToCloud}
+              startIcon={<LibraryAddIcon />}
+            >
+              Save Classified Paper
+            </Button>
+          )}
         </Box>
+      )}
+      {loadingClassify && (
+        <Button onClick={openPDF} startIcon={<PictureAsPdfIcon />}>
+          View PDF
+        </Button>
       )}
       {
         <Box

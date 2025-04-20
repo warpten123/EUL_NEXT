@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "EUL",
   description: "EUL Dashboard",
 };
 
@@ -24,6 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+        <head>
+   
+        <link rel="icon" href="/images/login-logo.png" type="image/png" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>

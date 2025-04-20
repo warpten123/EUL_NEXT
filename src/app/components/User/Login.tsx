@@ -9,6 +9,7 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
@@ -25,6 +26,7 @@ const Login = () => {
   const { createUserWithEmailPassword, signInWithEmailPassword } =
     useAuthFirebase();
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -46,6 +48,7 @@ const Login = () => {
   };
 
   const handleSignUp = async () => {
+    setIsLoading(true);
     try {
       await createUserWithEmailPassword(email, password);
       setSnackbarOpen({
@@ -58,21 +61,30 @@ const Login = () => {
       console.error("Error during sign-up:", err);
       setSnackbarOpen({
         open: true,
-        message: "Failed to create user. Please try again.",
+        message: "Error during Sign Up. Please try again.",
       });
       setError("Failed to create user. Please try again.");
     }
+    setIsLoading(false);
   };
 
   const handleLogin = async () => {
+    setIsLoading(true);
     try {
       const userCredential = await signInWithEmailPassword(email, password);
       console.log(userCredential);
       router.push("/dashboard");
     } catch (error) {
+      setSnackbarOpen({
+        open: true,
+        message: "Login Error. Please try again.",
+      });
       console.error("Error logging in:", error);
     }
+    setIsLoading(false);
   };
+
+  console.log(isLoading);
 
   return (
     <Box
@@ -135,9 +147,9 @@ const Login = () => {
               textAlign="center"
               gutterBottom
               sx={{
-                fontSize: "0.875rem", 
-                fontStyle: "italic", 
-                fontWeight: "bold", 
+                fontSize: "0.875rem",
+                fontStyle: "italic",
+                fontWeight: "bold",
               }}
             >
               {"UN SDG Classifier and Repository"}
@@ -211,10 +223,30 @@ const Login = () => {
               variant="contained"
               color="primary"
               fullWidth
-              sx={{ mt: 2, py: 1 }}
+              sx={{ mt: 2, py: 1, position: "relative", height: 48 }}
               onClick={isLogin ? handleLogin : handleSignUp}
+              disabled={isLoading}
             >
-              {isLogin ? "Login" : "Sign Up"}
+              {isLoading ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                  }}
+                >
+                  <CircularProgress size={24} sx={{ color: "white" }} />
+                </Box>
+              ) : isLogin ? (
+                "Login"
+              ) : (
+                "Sign Up"
+              )}
             </Button>
             {/* Google Login Button */}
             <Button
