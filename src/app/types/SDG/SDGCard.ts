@@ -25,3 +25,22 @@ export interface SDGViewCard {
   targetLink: string
   imageClear?: string
 }
+
+
+export interface Goal {
+  goalName: string
+  goalPercent: number
+}
+
+export interface SDGCollection {
+  goals: Goal[]
+  id: string
+}
+
+export interface YourSDGCard {
+  researchId: string
+  userId: string
+  url: string
+  staticImage: string
+  goals: Goal[]
+}

@@ -1,8 +1,11 @@
+import { CloudinaryFile } from "../components/User/UserSDGs";
 import { staticSDGData } from "../data/staticSDGData";
 import {
   SDGCard,
   SdgClassificationResult,
+  SDGCollection,
   SDGViewCard,
+  YourSDGCard,
 } from "../types/SDG/SDGCard";
 
 export const convertSDGResultToCard = (
@@ -84,7 +87,7 @@ export const createSDGViewCard = (data: SDGCard): SDGViewCard | null => {
       targetLink: item.targetLink,
     };
   }
-  return null; 
+  return null;
 };
 
 export const getSDGColor = (title: string): string => {
@@ -109,3 +112,64 @@ export const getSDGColor = (title: string): string => {
   };
   return sdgColors[title] || "#4fc3f7";
 };
+
+// export const convertToYourSDG = (
+// fromFirebase: SDGCollection[],
+// fromCloudinary: CloudinaryFile[]
+
+// ): YourSDGCard[] => {
+
+// }
+
+export const convertToYourSDG = (
+  fromFirebase: SDGCollection[],
+  fromCloudinary: CloudinaryFile[]
+): YourSDGCard[] => {
+  const payload: YourSDGCard[] = fromCloudinary
+    .filter((cloud) =>
+      fromFirebase.some((firebase) => firebase.id === parseCloudinaryPath(cloud.public_id)) // Match by public_id
+    )
+    .map((cloud) => {
+      const matchedFirebase = fromFirebase.find(
+        (firebase) => firebase.id === parseCloudinaryPath(cloud.public_id)
+      );
+
+      if (!matchedFirebase) {
+        return null; // Skip if no match is found
+      }
+
+      // Change the extension of secure_url to .jpg
+      const staticImage = cloud.secure_url.replace(/\.[^/.]+$/, ".jpg");
+
+      return {
+        researchId: matchedFirebase.id, // Use the Firebase document ID
+        userId:matchedFirebase.id.split("-")[0], // Extract userId from the path
+        url: cloud.secure_url, // Use the Cloudinary secure URL
+        staticImage, // Use the modified URL with .jpg extension
+        goals: matchedFirebase.goals, // Include goals from Firebase
+      } as YourSDGCard;
+    })
+    .filter((item): item is YourSDGCard => item !== null); // Filter out null values
+
+  return payload;
+};
+
+/**
+ * Parses a Cloudinary-style path and returns a combined ID.
+ * @param path A string like "users/UID/resID"
+ * @returns A string like "UID-resID"
+ */
+export function parseCloudinaryPath(path: string): string {
+  const parts = path.split("/");
+
+  if (parts.length !== 3 || parts[0] !== "users") {
+    throw new Error(
+      "Invalid path format. Expected format: users/{uid}/{resId}"
+    );
+  }
+
+  const uid = parts[1];
+  const resId = parts[2];
+
+  return `${uid}-${resId}`;
+}

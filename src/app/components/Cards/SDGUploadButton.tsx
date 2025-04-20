@@ -1,7 +1,11 @@
 "use client";
 import * as React from "react";
 import { fetchClassification, uploadFile } from "@/app/api/sdg-classifier";
-import { SDGCard, SdgClassificationResult } from "@/app/types/SDG/SDGCard";
+import {
+  Goal,
+  SDGCard,
+  SdgClassificationResult,
+} from "@/app/types/SDG/SDGCard";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
@@ -17,11 +21,12 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { uploadToCloudinary } from "@/app/api/upload-cloudinary";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import useLoggedUser from "@/app/hooks/useLoggedUser";
+import { saveGoalsToFirestore } from "@/app/api/firestore";
 
 export default function SDGUploadButtonCard() {
   const [results, setResults] = useState<SdgClassificationResult | null>(null);
   const [filteredCard, setFilteredCard] = useState<SDGCard[]>([]);
-  const [pdfFile, setPDfFile] = useState<File>();
+  const [pdfFile, setPdfFile] = useState<File>();
   const loggedUser = useLoggedUser();
   const [researchId, setResearchId] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState({
@@ -46,12 +51,35 @@ export default function SDGUploadButtonCard() {
     }
   };
 
+  const saveToFireStore = async () => {
+    const goalPayload: Goal[] = filteredCard.map((card) => ({
+      goalName: card.title,
+      goalPercent: card.percent,
+    }));
+    try {
+      const result = await saveGoalsToFirestore(
+        goalPayload,
+        loggedUser?.uid as string,
+        researchId
+      );
+      console.log("result",result)
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setSnackbarOpen({
+        open: true,
+        message: "Error uploading file",
+      });
+      setGoUpload(true);
+      setLoadingClassify(false);
+    }
+  };
+
   const onHandleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.target.files?.[0]) {
       setFilteredCard([]);
       setLoadingClassify(true);
-      setPDfFile(event.target.files?.[0]);
+      setPdfFile(event.target.files?.[0]);
       const researchFile = event.target.files[0];
       const fileName = event.target.files[0].name;
       setResearchId(generateResearchId());
@@ -82,8 +110,10 @@ export default function SDGUploadButtonCard() {
     try {
       const result = await uploadToCloudinary(
         pdfFile as File,
-        loggedUser?.uid as string
+        loggedUser?.uid as string,
+        researchId
       );
+      saveToFireStore()
       console.log("RESULT FROM CLOUD: ", result);
     } catch (error) {
       console.error("Error uploading file:", error);

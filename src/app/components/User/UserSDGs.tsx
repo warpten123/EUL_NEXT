@@ -1,67 +1,66 @@
 "use client";
-import { Box, Typography, Link } from "@mui/material";
+import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import useLoggedUser from "@/app/hooks/useLoggedUser";
+import { fetchGoalsByUserId } from "@/app/api/firestore";
+import { convertToYourSDG } from "@/app/helpers/sdgHelpers";
+import YourSDGCardComponent from "../Cards/YourSDGCard";
+import { YourSDGCard } from "@/app/types/SDG/SDGCard";
 
-type CloudinaryFile = {
+export interface CloudinaryFile {
   filename: string;
   format: string;
   secure_url: string;
   public_id: string;
-};
+}
 
 const UserSDGs = () => {
   const [userFiles, setUserFiles] = useState<CloudinaryFile[]>([]);
+  const [yourSDGs, setYourSDGs] = useState<YourSDGCard[]>([]); // Store the converted SDG cards
   const loggedUser = useLoggedUser();
 
+  console.log(userFiles);
   useEffect(() => {
     const fetchUserFiles = async () => {
       if (loggedUser) {
         try {
+          // Fetch user files from Cloudinary
           const res = await fetch(
             `/api/cloudinary/user-files?folder=users/${loggedUser.uid}`
           );
           const files = await res.json();
           setUserFiles(files);
+
+          // Fetch goals from Firestore
+          const res2 = await fetchGoalsByUserId(loggedUser.uid);
+
+          // Convert to YourSDGCard
+          const convertedSDGs = convertToYourSDG(res2, files);
+          setYourSDGs(convertedSDGs); // Update the state with converted SDGs
         } catch (err) {
-          console.error("Error fetching user files:", err);
+          console.error("Error fetching user files or goals:", err);
         }
       }
     };
 
     fetchUserFiles();
-  }, [loggedUser]);
+  }, [loggedUser]); // Only run when loggedUser changes
 
-console.log(userFiles)
+  console.log(yourSDGs);
 
   return (
-    <Box>
-      {userFiles?.map((item, ) => (
-        <Box
-          key={item.public_id}
-          sx={{
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            padding: "16px",
-            marginBottom: "8px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography variant="body1" fontWeight="bold">
-            {item.filename}.{item.format}
-          </Typography>
-          <Link
-            href={item.secure_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="hover"
-            color="primary"
-            fontWeight="bold"
-          >
-            View File
-          </Link>
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        gap: 5,
+        mt: 6,
+      }}
+    >
+      {yourSDGs?.map((item, index) => (
+        <Box key={index + 1}>
+          <YourSDGCardComponent card={item} />
         </Box>
       ))}
     </Box>

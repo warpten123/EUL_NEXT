@@ -5,12 +5,16 @@ const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
 const apiSecret = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET_KEY;
 const baseURL = `https://api.cloudinary.com/v1_1/${cloudName}`;
 
-export const uploadToCloudinary = async (file: File, folderName: string) => {
+export const uploadToCloudinary = async (
+  file: File,
+  folderName: string,
+  filename: string 
+) => {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", `${presetFile}`);
   formData.append("folder", `users/${folderName}`);
-
+  formData.append("public_id", filename);
   const response = await fetch(`${baseURL}/upload`, {
     method: "POST",
     body: formData,
@@ -21,8 +25,6 @@ export const uploadToCloudinary = async (file: File, folderName: string) => {
 };
 
 export const fetchFilesFromCloudinary = async (folderName: string) => {
-
-
   const auth = Buffer.from(`${apiKey}:${apiSecret}`).toString("base64");
 
   const response = await fetch(
