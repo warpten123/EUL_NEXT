@@ -9,7 +9,6 @@ import { getSDGColor } from "@/app/helpers/sdgHelpers";
 import { Box } from "@mui/material";
 import { YourSDGCard } from "@/app/types/SDG/SDGCard";
 
-
 interface SDGCardProps {
   card: YourSDGCard;
 }
@@ -27,7 +26,6 @@ interface SDGCardProps {
 // `;
 
 export default function YourSDGCardComponent(data: Readonly<SDGCardProps>) {
- 
   // const handleClickOpenSDGView = () => setOpen(true);
   // const handleCloseView = () => setOpen(false);
 
@@ -114,29 +112,61 @@ export default function YourSDGCardComponent(data: Readonly<SDGCardProps>) {
                 textAlign: "center",
                 px: 1,
                 display: "flex",
-                flexWrap: "wrap",
-                gap: 1, // Add spacing between buttons
-                justifyContent: "center",
+                flexDirection: "column", // Stack rectangles vertically
+                height: "100%", // Make it span the entire card
+                width: "100%", // Full width of the card
               }}
             >
               {data.card.goals.map((goal, index) => (
                 <Box
                   key={index}
-                  component="button"
                   sx={{
                     backgroundColor: getSDGColor(goal.goalName), // Dynamically set the background color
                     color: "white",
                     border: "none",
-                    borderRadius: "8px",
-                    padding: "8px 16px",
-                    cursor: "pointer",
+                    borderRadius:
+                      index === 0
+                        ? "8px 8px 0 0"
+                        : index === data.card.goals.length - 1
+                          ? "0 0 8px 8px"
+                          : "0", // Rounded corners for the first and last rectangles
+                    flex: goal.goalPercent, // Dynamically set the size based on percentage
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     fontWeight: "bold",
                     fontSize: "1rem",
                     textAlign: "center",
-                    minWidth: "50px",
+                    overflow: "hidden",
+                    position: "relative", // Make the rectangle a relative container
                   }}
                 >
-                  {goal.goalName} {/* Label the button with the goal name */}
+                  {/* Goal Name */}
+                  <span
+                    style={{
+                      zIndex: 2,
+                      fontSize: "1.2rem",
+                      fontWeight: "bold",
+                      textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", // Add a subtle shadow for better readability
+                    }}
+                  >
+                    {goal.goalName}
+                  </span>
+
+                  {/* Percentage Text */}
+                  <span
+                    style={{
+                      position: "absolute",
+                      bottom: "8px", // Position the percentage text at the bottom
+                      right: "8px",
+                      fontSize: "0.9rem",
+                      fontWeight: "bold",
+                      color: "rgba(255, 255, 255, 0.8)", // Slightly transparent white
+                      textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", // Add a shadow for better readability
+                    }}
+                  >
+                    {goal.goalPercent}%
+                  </span>
                 </Box>
               ))}
             </Box>
