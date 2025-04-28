@@ -3,7 +3,7 @@ import { SdgClassificationResult, UploadResponse } from '../types/SDG/SDGCard';
 
 
 
-const BASE_URL = 'http://127.0.0.1:5000';
+const BASE_URL = process.env.NEXT_PUBLIC_ALGORITHM_PYTHON
 
 export const fetchClassification = async (filename: string): Promise<SdgClassificationResult> => {
     try {
