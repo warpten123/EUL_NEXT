@@ -4,22 +4,19 @@ import * as React from "react";
 import { createTheme } from "@mui/material/styles";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ReceiptIcon from "@mui/icons-material/Receipt";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import DescriptionIcon from "@mui/icons-material/Description";
-import LayersIcon from "@mui/icons-material/Layers";
 import {
   AppProvider,
   Branding,
   Navigation,
   Router,
 } from "@toolpad/core/AppProvider";
+import InfoIcon from '@mui/icons-material/Info';
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { PageContainer } from "@toolpad/core/PageContainer";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import LogoutIcon from "@mui/icons-material/Logout";
 import InventoryIcon from "@mui/icons-material/Inventory";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import NewspaperIcon from "@mui/icons-material/Newspaper";
+
 import SettingsIcon from "@mui/icons-material/Settings";
 import TestPage from "../test/page";
 import Image from "next/image";
@@ -29,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { Typography } from "@mui/material";
 import useLoggedUser from "../hooks/useLoggedUser";
 import UserSDGs from "./User/UserSDGs";
+import About from "./About/About";
 
 const NAVIGATION: Navigation = [
   {
@@ -42,14 +40,14 @@ const NAVIGATION: Navigation = [
     children: [
       {
         segment: "upload-sdg-paper",
-        title: "Classify Research Paper",
+        title: "Classify Document/Paper",
         icon: <CloudUploadIcon />,
       },
-      {
-        segment: "upload-article-links",
-        title: "Classify News Article",
-        icon: <NewspaperIcon />,
-      },
+      // {
+      //   segment: "upload-article-links",
+      //   title: "Classify News Article",
+      //   icon: <NewspaperIcon />,
+      // },
     ],
   },
 
@@ -66,35 +64,35 @@ const NAVIGATION: Navigation = [
   {
     kind: "divider",
   },
-  {
-    kind: "header",
-    title: "Analytics",
-  },
-  {
-    segment: "reports",
-    title: "Reports",
-    icon: <BarChartIcon />,
-    children: [
-      {
-        segment: "sales",
-        title: "Sales",
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: "traffic",
-        title: "Traffic",
-        icon: <DescriptionIcon />,
-      },
-    ],
-  },
-  {
-    segment: "integrations",
-    title: "Integrations",
-    icon: <LayersIcon />,
-  },
-  {
-    kind: "divider",
-  },
+  // {
+  //   kind: "header",
+  //   title: "Analytics",
+  // },
+  // {
+  //   segment: "reports",
+  //   title: "Reports",
+  //   icon: <BarChartIcon />,
+  //   children: [
+  //     {
+  //       segment: "sales",
+  //       title: "Sales",
+  //       icon: <DescriptionIcon />,
+  //     },
+  //     {
+  //       segment: "traffic",
+  //       title: "Traffic",
+  //       icon: <DescriptionIcon />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   segment: "integrations",
+  //   title: "Integrations",
+  //   icon: <LayersIcon />,
+  // },
+  // {
+  //   kind: "divider",
+  // },
   {
     kind: "header",
     title: "System",
@@ -104,17 +102,26 @@ const NAVIGATION: Navigation = [
     title: "Settings",
     icon: <SettingsIcon />,
     children: [
-      {
-        segment: "account",
-        title: "Account",
-        icon: <AccountCircleIcon />,
-      },
+      // {
+      //   segment: "account",
+      //   title: "Account",
+      //   icon: <AccountCircleIcon />,
+      // },
       {
         segment: "logout",
         title: "Logout",
         icon: <LogoutIcon />,
       },
     ],
+  },
+  {
+    kind: "header",
+    title: "About ",
+  },
+  {
+    segment: "about",
+    title: "About The Site",
+    icon: <InfoIcon />,
   },
 ];
 
@@ -164,7 +171,7 @@ export default function DashboardLayoutBasic(props: any) {
 
   const { window } = props;
 
-  const router = useDemoRouter("/dashboard");
+  const router = useDemoRouter("/about");
 
   // Remove this const when copying and pasting into your project.
   const demoWindow = window ? window() : undefined;
@@ -198,6 +205,8 @@ export default function DashboardLayoutBasic(props: any) {
         return null;
       case "/user-sdgs":
         return <UserSDGs />
+      case "/about":
+        return <About />
       default:
         return (
           <Typography
