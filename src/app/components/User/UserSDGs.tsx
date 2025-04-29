@@ -16,7 +16,7 @@ export interface CloudinaryFile {
 }
 
 const UserSDGs = () => {
-  const [userFiles, setUserFiles] = useState<CloudinaryFile[]>([]);
+  // const [userFiles, setUserFiles] = useState<CloudinaryFile[]>([]);
   const [yourSDGs, setYourSDGs] = useState<YourSDGCard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const loggedUser = useLoggedUser();
@@ -31,7 +31,7 @@ const UserSDGs = () => {
             `/api/cloudinary/user-files?folder=users/${loggedUser.uid}`
           );
           const files = await res.json();
-          setUserFiles(files);
+          // setUserFiles(files);
 
           // Fetch goals from Firestore
           const res2 = await fetchGoalsByUserId(loggedUser.uid);
