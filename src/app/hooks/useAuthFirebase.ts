@@ -11,9 +11,11 @@ import { setAuthCookie } from "../helpers/setAuthCookie";
 const useAuthFirebase = () => {
   //sign up
   const createUserWithEmailPassword = async (
-    email: string,
+    signUpPayload: string,
     password: string
   ) => {
+    const email = signUpPayload.split("+")[0].trim();
+    const displayName = signUpPayload.split("+")[1].trim();
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -22,7 +24,7 @@ const useAuthFirebase = () => {
       );
       if (auth.currentUser) {
         await updateProfile(auth.currentUser, {
-          displayName:  email.split("@")[0].toUpperCase(), 
+          displayName,
         });
       }
       return userCredential.user;

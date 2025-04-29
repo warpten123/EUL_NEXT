@@ -26,6 +26,7 @@ import { saveGoalsToFirestore } from "@/app/api/firestore";
 export default function SDGUploadButtonCard() {
   const [results, setResults] = useState<SdgClassificationResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploadCloudClick, setIsUploadCloudClick] = useState(false);
   const [filteredCard, setFilteredCard] = useState<SDGCard[]>([]);
   const [pdfFile, setPdfFile] = useState<File>();
   const loggedUser = useLoggedUser();
@@ -58,12 +59,11 @@ export default function SDGUploadButtonCard() {
       goalPercent: card.percent,
     }));
     try {
-      const result = await saveGoalsToFirestore(
+      await saveGoalsToFirestore(
         goalPayload,
         loggedUser?.uid as string,
         researchId
       );
-      console.log("result", result);
     } catch (error) {
       console.error("Error uploading file:", error);
       setSnackbarOpen({
@@ -78,12 +78,15 @@ export default function SDGUploadButtonCard() {
   const onHandleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (event.target.files?.[0]) {
+      setGoUpload(true);
       setFilteredCard([]);
       setLoadingClassify(true);
-      setPdfFile(event.target.files?.[0]);
+
       const researchFile = event.target.files[0];
       const fileName = event.target.files[0].name;
-      setResearchId(generateResearchId());
+      const newResearchId = generateResearchId();
+      setResearchId(newResearchId);
+      setPdfFile(researchFile);
       try {
         await uploadFile(researchFile, researchId);
         fetchApi(fileName);
@@ -93,7 +96,7 @@ export default function SDGUploadButtonCard() {
           open: true,
           message: "Error uploading file",
         });
-        setGoUpload(true);
+
         setLoadingClassify(false);
       }
     } else {
@@ -119,6 +122,7 @@ export default function SDGUploadButtonCard() {
         open: true,
         message: `File Successfully Saved in EUL!`,
       });
+      setIsUploadCloudClick(false);
     } catch (error) {
       console.error("Error uploading file:", error);
       setSnackbarOpen({
@@ -127,6 +131,7 @@ export default function SDGUploadButtonCard() {
       });
       setGoUpload(true);
       setLoadingClassify(false);
+      setIsUploadCloudClick(true);
     }
     setIsLoading(false);
   };
@@ -142,15 +147,18 @@ export default function SDGUploadButtonCard() {
         open: true,
         message: "Research Successfully Classified!",
       });
-      setGoUpload(true);
+      setIsUploadCloudClick(true);
     } catch (error) {
       console.error("Error fetching classification:", error);
       setSnackbarOpen({
         open: true,
-        message: "Error fetching classification",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        message: (error as any)?.response?.data?.message ?? "Error fetching classification",
       });
       setLoadingClassify(false);
+      setIsUploadCloudClick(false);
     }
+    setGoUpload(true);
   };
 
   useEffect(() => {
@@ -170,38 +178,40 @@ export default function SDGUploadButtonCard() {
             alignItems: "center",
           }}
         >
-          <Button
-            startIcon={<CloudUploadIcon />}
-            onClick={() => {
-              setGoUpload(false);
-              setFilteredCard([]);
-              setLoadingClassify(false);
-              setSnackbarOpen({
-                open: false,
-                message: "",
-              });
-            }}
-          >
-            Upload Again
-          </Button>
+          {!isLoading && (
+            <Button
+              startIcon={<CloudUploadIcon />}
+              onClick={() => {
+                setGoUpload(false);
+                setFilteredCard([]);
+                setLoadingClassify(false);
+                setIsUploadCloudClick(false)
+              }}
+            >
+              Upload Again
+            </Button>
+          )}
 
           {isLoading ? (
             <CircularProgress />
           ) : (
-            <Button
-              onClick={handleUploadToCloud}
-              startIcon={<LibraryAddIcon />}
-            >
-              Save Classified Paper
+            results !== null && isUploadCloudClick && (
+              <Button
+                onClick={handleUploadToCloud}
+                startIcon={<LibraryAddIcon />}
+              >
+                Save Classified Paper
+              </Button>
+            )
+          )}
+          {goUpload && (
+            <Button onClick={openPDF} startIcon={<PictureAsPdfIcon />}>
+              View PDF
             </Button>
           )}
         </Box>
       )}
-      {loadingClassify && (
-        <Button onClick={openPDF} startIcon={<PictureAsPdfIcon />}>
-          View PDF
-        </Button>
-      )}
+
       {
         <Box
           sx={{

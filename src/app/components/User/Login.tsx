@@ -12,6 +12,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import LockIcon from "@mui/icons-material/Lock";
 import GoogleIcon from "@mui/icons-material/Google";
 import Visibility from "@mui/icons-material/Visibility";
@@ -26,13 +27,11 @@ const Login = () => {
   const { createUserWithEmailPassword, signInWithEmailPassword } =
     useAuthFirebase();
   const [isLogin, setIsLogin] = useState(true);
+  const [displayName, setDisplayName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-
-  console.log(error);
 
   //for snackbar
   const [snackbarOpen, setSnackbarOpen] = useState({
@@ -48,14 +47,15 @@ const Login = () => {
   };
 
   const handleSignUp = async () => {
+    const signUpPayload = `${email} + ${displayName}`
     setIsLoading(true);
     try {
-      await createUserWithEmailPassword(email, password);
+      await createUserWithEmailPassword(signUpPayload, password);
       setSnackbarOpen({
         open: true,
         message: "Successfully Registered! Login Now",
       });
-      setError("");
+
       setIsLogin(true);
     } catch (err) {
       console.error("Error during sign-up:", err);
@@ -63,7 +63,6 @@ const Login = () => {
         open: true,
         message: "Error during Sign Up. Please try again.",
       });
-      setError("Failed to create user. Please try again.");
     }
     setIsLoading(false);
   };
@@ -71,8 +70,8 @@ const Login = () => {
   const handleLogin = async () => {
     setIsLoading(true);
     try {
-      const userCredential = await signInWithEmailPassword(email, password);
-      console.log(userCredential);
+      await signInWithEmailPassword(email, password);
+
       router.push("/dashboard");
     } catch (error) {
       setSnackbarOpen({
@@ -83,8 +82,6 @@ const Login = () => {
     }
     setIsLoading(false);
   };
-
-  console.log(isLoading);
 
   return (
     <Box
@@ -158,24 +155,24 @@ const Login = () => {
               {isLogin ? "Login to Your Account" : "Create an Account"}
             </Typography>
 
-            {/* {!isLogin && (
+            {!isLogin && (
               <TextField
                 fullWidth
                 label="Display Name"
-                type="email"
+                type="text"
                 margin="normal"
                 onChange={(e) => {
-                  setEmail(e.target.value);
+                  setDisplayName(e.target.value);
                 }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <EmailIcon />
+                      <DriveFileRenameOutlineIcon />
                     </InputAdornment>
                   ),
                 }}
               />
-            )} */}
+            )}
 
             <TextField
               fullWidth

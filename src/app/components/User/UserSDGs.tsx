@@ -6,6 +6,7 @@ import { fetchGoalsByUserId } from "@/app/api/firestore";
 import { convertToYourSDG } from "@/app/helpers/sdgHelpers";
 import YourSDGCardComponent from "../Cards/YourSDGCard";
 import { YourSDGCard } from "@/app/types/SDG/SDGCard";
+import EmptyMessage from "../Extra/EmptyMessage";
 
 export interface CloudinaryFile {
   filename: string;
@@ -19,7 +20,7 @@ const UserSDGs = () => {
   const [yourSDGs, setYourSDGs] = useState<YourSDGCard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const loggedUser = useLoggedUser();
-  console.log("userFiles",userFiles)
+
   useEffect(() => {
     const fetchUserFiles = async () => {
       if (loggedUser) {
@@ -73,11 +74,18 @@ const UserSDGs = () => {
         mt: 6,
       }}
     >
-      {yourSDGs?.map((item, index) => (
-        <Box key={index + 1}>
-          <YourSDGCardComponent card={item} />
-        </Box>
-      ))}
+      {yourSDGs.length > 0 ? (
+        yourSDGs.map((item, index) => (
+          <Box key={index + 1}>
+            <YourSDGCardComponent card={item} />
+          </Box>
+        ))
+      ) : (
+        <EmptyMessage
+          mainMessage="No SDGs Found!"
+          description="You haven't uploaded any SDGs yet. Please upload to see your SDGs."
+        />
+      )}
     </Box>
   );
 };

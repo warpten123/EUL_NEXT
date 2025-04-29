@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,9 +15,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "EUL",
-  description: "EUL Dashboard",
+  description: "EUL - United Nation's Sustainable DEvelopment Goals (SDG) Classifier",
+  keywords: "EUL, SDG, Research, KNN Classifier, Cosine Similarity, TFIDF, NLP, Machine Learning",
+  authors: { name: "PAUL JOSHUA PREMACIO" },
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,6 +32,7 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
