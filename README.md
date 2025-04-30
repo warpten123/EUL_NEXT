@@ -3,7 +3,7 @@
 A full-stack web application that classifies uploaded research papers or documents into the top 4 most relevant **United Nations Sustainable Development Goals (SDGs)** using Natural Language Processing (NLP).
 
 ## 🔥 Live Demo
-[View Frontend on Vercel](https://your-vercel-link.com)
+[View Frontend on Vercel](https://eulnext.vercel.app/login)
 
 ## 🛠 Tech Stack
 
@@ -18,7 +18,7 @@ A full-stack web application that classifies uploaded research papers or documen
 
 ## ✨ Features
 
-- Upload any research paper or text-based document.
+- Upload any  text-based document.
 - Automatically classifies into top 4 matching SDGs with percentage weights.
 - Realtime file upload to Cloudinary.
 - Stores classification results in Firestore.
