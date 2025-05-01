@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import * as React from "react";
 import { fetchClassification, uploadFile } from "@/app/api/sdg-classifier";
@@ -8,7 +9,15 @@ import {
 } from "@/app/types/SDG/SDGCard";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import { Box, CircularProgress } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import {
   convertSDGResultToCard,
   generateResearchId,
@@ -36,8 +45,49 @@ export default function SDGUploadButtonCard() {
     message: "",
   });
   const [goUpload, setGoUpload] = useState(false);
-
   const [loadingClassify, setLoadingClassify] = useState(false);
+
+  const [openTutorial, setOpenTutorial] = useState(true);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const tutorialSteps = [
+    {
+      title: "Welcome to the SDG Classifier!",
+      description:
+        "This tool helps you classify your research paper into Sustainable Development Goals (SDGs).",
+      image: "/images/default.png", // Add the image path
+    },
+    {
+      title: "Step 1: Upload Your Paper",
+      description:
+        "Click on the 'Upload Paper' button to upload your document in PDF format.",
+      image: "/images/tut2.png", // Add the image path
+    },
+    {
+      title: "Step 2: Classification",
+      description:
+        "Once uploaded, your paper will be classified into the top matching SDGs. Since the classifier code is being hosted on a free hosting site, this will take around 4-6 minutes 😔",
+      image: "/images/sdg_gif_text.gif", // Add the image path
+    },
+    {
+      title: "Step 3: Save Your Results",
+      description:
+        "You can save the classification results to your account for future reference.",
+      image: "/images/eul.gif", // Add the image path
+    },
+  ];
+
+  const handleNextStep = () => {
+    if (currentStep < tutorialSteps.length - 1) {
+      setCurrentStep((prev) => prev + 1);
+    } else {
+      setOpenTutorial(false); // Close the tutorial when the last step is reached
+    }
+  };
+
+  const handleCloseTutorial = () => {
+    setOpenTutorial(false);
+  };
 
   const handleClose = () => {
     setSnackbarOpen({
@@ -45,6 +95,10 @@ export default function SDGUploadButtonCard() {
       open: false,
     });
   };
+  useEffect(() => {
+    // Open the tutorial popup on mount
+    setOpenTutorial(true);
+  }, []);
 
   const openPDF = () => {
     if (pdfFile) {
@@ -153,7 +207,9 @@ export default function SDGUploadButtonCard() {
       setSnackbarOpen({
         open: true,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        message: (error as any)?.response?.data?.message ?? "Error fetching classification",
+        message:
+          (error as any)?.response?.data?.message ??
+          "Error fetching classification",
       });
       setLoadingClassify(false);
       setIsUploadCloudClick(false);
@@ -169,6 +225,42 @@ export default function SDGUploadButtonCard() {
 
   return (
     <>
+      <Dialog open={openTutorial} onClose={handleCloseTutorial}>
+        <DialogTitle>{tutorialSteps[currentStep].title}</DialogTitle>
+        <DialogContent>
+          {/* Add an image for the current step */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 2,
+            }}
+          >
+            <img
+              src={tutorialSteps[currentStep].image}
+              alt={tutorialSteps[currentStep].title}
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+              }}
+            />
+            <Typography>{tutorialSteps[currentStep].description}</Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseTutorial} color="secondary">
+            Skip
+          </Button>
+          <Button onClick={handleNextStep} color="primary">
+            {currentStep < tutorialSteps.length - 1 ? "Next" : "Finish"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {goUpload && (
         <Box
           sx={{
@@ -185,7 +277,7 @@ export default function SDGUploadButtonCard() {
                 setGoUpload(false);
                 setFilteredCard([]);
                 setLoadingClassify(false);
-                setIsUploadCloudClick(false)
+                setIsUploadCloudClick(false);
               }}
             >
               Upload Again
@@ -195,7 +287,8 @@ export default function SDGUploadButtonCard() {
           {isLoading ? (
             <CircularProgress />
           ) : (
-            results !== null && isUploadCloudClick && (
+            results !== null &&
+            isUploadCloudClick && (
               <Button
                 onClick={handleUploadToCloud}
                 startIcon={<LibraryAddIcon />}

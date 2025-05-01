@@ -21,14 +21,14 @@ export default function EmptySDGCard(fileChange: EmptySDGCardProps) {
     }
   };
 
-  const staticTitle = "Upload Paper";
-  const loadingTitle = "Classifying your paper...";
+  const staticTitle = "Upload Document";
+  const loadingTitle = "Classifying your document...";
 
   const staticDescription =
-    "To check the SDG classification of your research paper, please upload it here.";
+    "To check the SDG classification of your document, please upload it here.";
 
   const loadingDescription =
-    "Your research paper is being classified. Please wait a moment.";
+    "Your document is being classified. Please wait a moment. The classifier is being hosted from a free hosting site so this will take time around 4-6 minutes 😔";
 
   const displatyTitle = fileChange.loadingClassify ? loadingTitle : staticTitle;
   const displayDescription = fileChange.loadingClassify

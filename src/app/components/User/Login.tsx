@@ -14,7 +14,6 @@ import {
 import EmailIcon from "@mui/icons-material/Email";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import LockIcon from "@mui/icons-material/Lock";
-import GoogleIcon from "@mui/icons-material/Google";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Image from "next/image";
@@ -46,8 +45,12 @@ const Login = () => {
     });
   };
 
+  // const handleGuest = () => {
+  //   router.push("/dashboard");
+  // };
+
   const handleSignUp = async () => {
-    const signUpPayload = `${email} + ${displayName}`
+    const signUpPayload = `${email} + ${displayName}`;
     setIsLoading(true);
     try {
       await createUserWithEmailPassword(signUpPayload, password);
@@ -56,7 +59,17 @@ const Login = () => {
         message: "Successfully Registered! Login Now",
       });
 
-      setIsLogin(true);
+      try {
+        await signInWithEmailPassword(email, password);
+
+        router.push("/dashboard");
+      } catch (error) {
+        setSnackbarOpen({
+          open: true,
+          message: "Login Error. Please try again.",
+        });
+        console.error("Error logging in:", error);
+      }
     } catch (err) {
       console.error("Error during sign-up:", err);
       setSnackbarOpen({
@@ -246,15 +259,16 @@ const Login = () => {
               )}
             </Button>
             {/* Google Login Button */}
-            <Button
+            {/* <Button
               variant="outlined"
               color="primary"
+              onClick={handleGuest}
               fullWidth
               sx={{ mt: 2, py: 1 }}
-              startIcon={<GoogleIcon />} // Google Icon
+              startIcon={<PermContactCalendarIcon />} 
             >
-              Sign in with Google
-            </Button>
+              Continue as Guest
+            </Button> */}
             <Button
               variant="text"
               color="primary"
@@ -266,6 +280,16 @@ const Login = () => {
                 ? "Don't have an account? Sign Up"
                 : "Already have an account? Login"}
             </Button>
+            {!isLogin && (
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{ mt: 1, fontStyle: "italic", textAlign: "center" }}
+              >
+                This is a demo site. You can use any email and password to sign
+                up.
+              </Typography>
+            )}
           </CardContent>
         </Card>
       </Box>
